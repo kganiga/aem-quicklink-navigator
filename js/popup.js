@@ -11,9 +11,9 @@ $(document).ready(function () {
                               <tbody>
                                 <tr>
                                   <th scope="row">Environment Details</th>
-                                  <td data-label="Environment Details"><a href="${valArr[1]}" target="_blank">${valArr[0]}</a></td>
-                                  <td data-label="Environment Details">Username : <span> ${valArr[2]}</span></td>
-                                  <td data-label="Environment Details">Password : <span> ${valArr[3]}</span></td>
+                                  <td data-label="Environment Details"><a href="${valArr[1]}" target="_blank">${valArr[1]}</a></td>
+                                  <td data-label="Environment Details"><span> ${valArr[2]}</span></td>
+                                  <td data-label="Environment Details" class="pwd"><span id="pwd-masked">******</span><span id="pwd-val">${valArr[3]}</span></td>
                                 </tr>
                                 <tr>
                                   <th scope="row">Consoles</th>
