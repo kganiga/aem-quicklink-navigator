@@ -21,7 +21,7 @@ body {
   line-height: 1.5;
 }
 
-nav > ul {
+nav>ul {
   display: flex;
   flex-direction: row;
   margin-left: 5px;
@@ -30,7 +30,7 @@ nav > ul {
   list-style: none;
 }
 
-.logo > img {
+.logo>img {
   width: 50px;
   height: 50px;
   margin-top: 10px;
@@ -51,7 +51,7 @@ hr {
   margin-bottom: 10px;
 }
 
-.accordion-container > h3 {
+.accordion-container>h3 {
   cursor: pointer;
   font-size: 20px;
   font-weight: normal;
@@ -286,12 +286,35 @@ form input[type="password"] {
   color: rgba(0, 0, 0, 0.65);
   transform: translateY(0);
 }
+
 .pwd:hover #pwd-masked {
   display: none;
 }
+
 .pwd:hover #pwd-val {
   display: inline;
 }
+
 #pwd-val {
   display: none;
+}
+
+.error {
+  color: red;
+}
+
+
+.footer {
+  text-align: center;
+  margin-top: 20px;
+}
+
+a {
+  text-decoration: none;
+  color: #3498db;
+  margin-right: 10px;
+}
+
+p {
+  margin-top: 10px;
 }

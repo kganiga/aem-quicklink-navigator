@@ -1,13 +1,17 @@
 {
   "name": "AEM Quicklink Navigator",
   "description": "Quick navigation toolkit for AEM developers.",
-  "version": "1.0",
+  "version": "1.1",
   "manifest_version": 3,
   "background": {
     "service_worker": "background.js"
   },
-
-  "permissions": ["storage", "activeTab", "scripting"],
+  "permissions": [
+    "storage",
+    "activeTab",
+    "scripting",
+    "tabs"
+  ],
   "action": {
     "default_popup": "popup.html",
     "default_icon": {
