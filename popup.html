@@ -1,64 +1,72 @@
 <!DOCTYPE html>
 <html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AEM Quicklink Navigator</title>
+    <link rel="stylesheet" href="css/style.default.css" type="text/css" />
+  </head>
 
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Popup</title>
-  <!-- <link rel="stylesheet" href="css/font-awesome.css" type="text/css" /> -->
-  <link rel="stylesheet" href="css/style.default.css" type="text/css" />
-
-<body>
-  <div class="container">
-    <header class="navbar-fixed-top">
-      <nav>
-        <ul>
-          <li class="logo">
-            <image src="images/get_started128.png" />
-          </li>
-          <li class="logo-txt">AEM Quicklink Navigator</li>
-        </ul>
-      </nav>
-    </header>
-    <hr />
-    <section class="accordion-container"></section>
-    <section class="add-env">
-      <!-- <input type="button" value="ADD Environment" /> -->
-      <button class="button-12" role="button" id="add-env">ADD Environment</button>
-    </section>
-    <section class="form-container">
-      <form>
-        <button class="cancel-form">X</button>
-        <div>
-          <label for="env-title">Environment Name (Unique) *</label>
-          <input type="text" name="title" id="env-title" value="" />
-          <label for="env-url">URL*</label>
-          <input type="text" name="url" id="env-url" value="" />
-        </div>
-        <div>
-          <label for="env-username">Username*</label>
-          <input type="text" name="username" id="env-username" value="" />
-          <label for="env-password">Password*</label>
-          <input type="password" name="password" id="env-password" value="" />
-        </div>
-        <div>
-          <p class="error" id="error-message">Please fill all the details</p>
-          <input type="button" class="button-6" value="Submit" id="submit" />
-
-        </div>
-      </form>
-    </section>
-    <footer>
-      <div class="footer">
-        <p>© 2023 All rights reserved -<a href="https://www.linkedin.com/in/author-profile" target="_blank">@Khalil
-            Ganiga</a></p>
-      </div>
-    </footer>
-
-  </div>
-  <script src="js/jquery-min.js"></script>
-  <script src="js/jquery-ui.js"></script>
-  <script src="js/popup.js"></script>
-</body>
-
+  <body>
+    <div class="container">
+      <header class="navbar-fixed-top">
+        <nav>
+          <ul>
+            <li class="logo">
+              <img src="images/get_started128.png" />
+            </li>
+            <li class="logo-txt">AEM Quicklink Navigator</li>
+          </ul>
+        </nav>
+      </header>
+      <hr />
+      <section class="accordion-container"></section>
+      <section class="add-env">
+        <button class="button-12" role="button" id="add-env">
+          ADD Environment
+        </button>
+      </section>
+      <section class="form-container">
+        <form>
+          <button class="cancel-form">X</button>
+          <div>
+            <label for="env-title">Environment Name (Unique) *</label>
+            <input type="text" name="title" id="env-title" value="" />
+            <label for="env-url">URL*</label>
+            <input type="text" name="url" id="env-url" value="" />
+          </div>
+          <div>
+            <label for="env-username">Username*</label>
+            <input type="text" name="username" id="env-username" value="" />
+            <label for="env-password">Password*</label>
+            <input type="password" name="password" id="env-password" value="" />
+          </div>
+          <!-- <div>
+            <label for="open-new-tab">Open link in new tab:</label>
+            <input
+              type="checkbox"
+              name="open-new-tab"
+              id="open-new-tab"
+              checked
+            />
+          </div> -->
+          <div>
+            <p class="error" id="error-message">Please fill all the details</p>
+            <input type="button" class="button-6" value="Submit" id="submit" />
+          </div>
+        </form>
+      </section>
+      <footer>
+        <p>
+          &copy; <span id="copyright-year"></span> All Rights Reserved by -
+          <a href="https://khalilganiga.netlify.app" target="_blank"
+            >Quasilinear Thoughts</a
+          >
+        </p>
+      </footer>
+    </div>
+    <script src="js/jquery-min.js"></script>
+    <script src="js/jquery-ui.js"></script>
+    <script src="js/popup.js"></script>
+  </body>
 </html>
