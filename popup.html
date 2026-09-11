@@ -1,72 +1,504 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>AEM Quicklink Navigator</title>
-    <link rel="stylesheet" href="css/style.default.css" type="text/css" />
-  </head>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AEM Quicklink Navigator</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      width: 400px;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      padding: 12px;
+      margin: 0;
+      background: #f8f9fa;
+      font-size: 13px;
+      color: #1a1a2e;
+    }
+    h1 {
+      font-size: 16px;
+      margin: 0 0 12px 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #1a1a2e;
+    }
+    h1 small {
+      font-size: 12px;
+      font-weight: normal;
+      color: #6c757d;
+      margin-left: auto;
+    }
+    .tabs {
+      display: flex;
+      gap: 4px;
+      border-bottom: 2px solid #dee2e6;
+      margin-bottom: 12px;
+    }
+    .tabs button {
+      flex: 1;
+      padding: 8px 12px;
+      border: none;
+      background: transparent;
+      font-weight: 600;
+      cursor: pointer;
+      color: #6c757d;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -2px;
+      font-size: 13px;
+      font-family: inherit;
+    }
+    .tabs button.active {
+      color: #0d6efd;
+      border-bottom-color: #0d6efd;
+    }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
 
-  <body>
-    <div class="container">
-      <header class="navbar-fixed-top">
-        <nav>
-          <ul>
-            <li class="logo">
-              <img src="images/get_started128.png" />
-            </li>
-            <li class="logo-txt">AEM Quicklink Navigator</li>
-          </ul>
-        </nav>
-      </header>
-      <hr />
-      <section class="accordion-container"></section>
-      <section class="add-env">
-        <button class="button-12" role="button" id="add-env">
-          ADD Environment
-        </button>
-      </section>
-      <section class="form-container">
-        <form>
-          <button class="cancel-form">X</button>
-          <div>
-            <label for="env-title">Environment Name (Unique) *</label>
-            <input type="text" name="title" id="env-title" value="" />
-            <label for="env-url">URL*</label>
-            <input type="text" name="url" id="env-url" value="" />
-          </div>
-          <div>
-            <label for="env-username">Username*</label>
-            <input type="text" name="username" id="env-username" value="" />
-            <label for="env-password">Password*</label>
-            <input type="password" name="password" id="env-password" value="" />
-          </div>
-          <!-- <div>
-            <label for="open-new-tab">Open link in new tab:</label>
-            <input
-              type="checkbox"
-              name="open-new-tab"
-              id="open-new-tab"
-              checked
-            />
-          </div> -->
-          <div>
-            <p class="error" id="error-message">Please fill all the details</p>
-            <input type="button" class="button-6" value="Submit" id="submit" />
-          </div>
-        </form>
-      </section>
-      <footer>
-        <p>
-          &copy; <span id="copyright-year"></span> All Rights Reserved by -
-          <a href="https://khalilganiga.netlify.app" target="_blank"
-            >Quasilinear Thoughts</a
-          >
-        </p>
-      </footer>
+    .env-card {
+      background: white;
+      border: 1px solid #e9ecef;
+      border-radius: 6px;
+      padding: 10px 12px;
+      margin-bottom: 10px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    }
+    .env-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 4px;
+    }
+    .env-name {
+      font-weight: 600;
+      font-size: 14px;
+      color: #1a1a2e;
+    }
+    .env-badge {
+      font-size: 10px;
+      background: #6c63ff;
+      color: white;
+      padding: 1px 8px;
+      border-radius: 12px;
+      margin-left: 6px;
+      vertical-align: middle;
+    }
+    .env-badge.classic { background: #6c757d; }
+    .env-host {
+      font-size: 12px;
+      color: #6c757d;
+      font-family: monospace;
+      margin-bottom: 6px;
+      word-break: break-all;
+    }
+    .env-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin-top: 4px;
+    }
+    .env-links-dev {
+      margin-top: 6px;
+      padding-top: 6px;
+      border-top: 1px dashed #e9ecef;
+    }
+    .env-links-external {
+      margin-top: 6px;
+    }
+    .env-links-custom {
+      margin-top: 8px;
+      padding-top: 8px;
+      border-top: 1px solid #e9ecef;
+    }
+    .link-row {
+      display: inline-flex;
+      align-items: center;
+      background: #e9ecef;
+      border-radius: 12px;
+      transition: background 0.15s;
+    }
+    .link-row a {
+      padding: 2px 4px 2px 10px;
+      font-size: 11px;
+      text-decoration: none;
+      color: #1a1a2e;
+      white-space: nowrap;
+    }
+    .link-row:hover { background: #0d6efd; }
+    .link-row:hover a { color: white; }
+    .copy-btn, .link-remove-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 10px;
+      padding: 2px 8px 2px 2px;
+      line-height: 1;
+      color: #6c757d;
+      font-family: inherit;
+    }
+    .link-row:hover .copy-btn { color: #e9ecef; }
+    .copy-btn:hover { color: white !important; }
+    .link-remove-btn { color: #dc3545; font-size: 13px; }
+    .link-remove-btn:hover { color: #ffb3ba !important; }
+    .add-link-btn {
+      background: transparent;
+      border: 1px dashed #adb5bd;
+      border-radius: 12px;
+      padding: 2px 10px;
+      font-size: 11px;
+      cursor: pointer;
+      color: #6c757d;
+      font-family: inherit;
+    }
+    .add-link-btn:hover { border-color: #0d6efd; color: #0d6efd; }
+    .max-links-note {
+      font-size: 11px;
+      color: #adb5bd;
+      padding: 2px 4px;
+      font-style: italic;
+    }
+    .add-link-form {
+      margin-top: 8px;
+      padding: 8px;
+      background: #f8f9fa;
+      border: 1px solid #e9ecef;
+      border-radius: 6px;
+    }
+    .add-link-form input[type="text"] {
+      width: 100%;
+      padding: 5px 8px;
+      border: 1px solid #ced4da;
+      border-radius: 4px;
+      font-size: 12px;
+      margin-bottom: 6px;
+      font-family: inherit;
+    }
+    .link-form-actions {
+      display: flex;
+      gap: 6px;
+    }
+    .link-form-actions button {
+      padding: 4px 12px;
+      border: none;
+      border-radius: 4px;
+      font-size: 12px;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .env-search {
+      width: 100%;
+      padding: 6px 8px;
+      border: 1px solid #ced4da;
+      border-radius: 4px;
+      font-size: 13px;
+      margin-bottom: 10px;
+      font-family: inherit;
+    }
+    .detect-banner {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: #e7f1ff;
+      border: 1px solid #b6d4fe;
+      border-radius: 6px;
+      padding: 8px 10px;
+      margin-bottom: 10px;
+      font-size: 12px;
+      color: #1a1a2e;
+    }
+    .detect-banner .detect-host {
+      flex: 1;
+      font-family: monospace;
+      word-break: break-all;
+    }
+    .detect-banner button {
+      border: none;
+      border-radius: 4px;
+      padding: 4px 10px;
+      font-size: 12px;
+      cursor: pointer;
+      font-family: inherit;
+      white-space: nowrap;
+    }
+    .detect-banner .detect-add-btn { background: #0d6efd; color: white; }
+    .detect-banner .detect-add-btn:hover { background: #0b5ed7; }
+    .detect-banner .detect-dismiss-btn { background: transparent; color: #6c757d; padding: 4px 6px; }
+    .env-duplicate-btn {
+      background: none;
+      border: none;
+      color: #6c757d;
+      font-size: 13px;
+      cursor: pointer;
+      padding: 0 4px;
+      line-height: 1;
+      font-family: inherit;
+    }
+    .env-duplicate-btn:hover { color: #0d6efd; }
+    .env-delete-btn {
+      background: none;
+      border: none;
+      color: #dc3545;
+      font-size: 16px;
+      cursor: pointer;
+      padding: 0 4px;
+      line-height: 1;
+      font-family: inherit;
+    }
+    .env-delete-btn:hover { color: #b02a37; }
+
+    .add-form {
+      background: white;
+      border: 1px solid #e9ecef;
+      border-radius: 6px;
+      padding: 12px;
+      margin-top: 8px;
+    }
+    .add-form label {
+      display: block;
+      font-weight: 500;
+      font-size: 12px;
+      color: #495057;
+      margin-top: 8px;
+    }
+    .add-form label:first-of-type { margin-top: 0; }
+    .add-form input[type="text"] {
+      width: 100%;
+      padding: 6px 8px;
+      border: 1px solid #ced4da;
+      border-radius: 4px;
+      font-size: 13px;
+      margin-top: 2px;
+      font-family: inherit;
+    }
+    .add-form .checkbox-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 8px;
+    }
+    .add-form .checkbox-row input {
+      width: auto;
+      margin: 0;
+    }
+    .add-form select {
+      width: 100%;
+      padding: 6px 8px;
+      border: 1px solid #ced4da;
+      border-radius: 4px;
+      font-size: 13px;
+      margin-top: 2px;
+      font-family: inherit;
+    }
+    #env-tier-row { margin-top: 8px; }
+    .add-form .form-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+    }
+    .add-form .form-actions button {
+      padding: 6px 16px;
+      border: none;
+      border-radius: 4px;
+      font-weight: 500;
+      cursor: pointer;
+      font-size: 13px;
+      font-family: inherit;
+    }
+    .btn-primary {
+      background: #0d6efd;
+      color: white;
+    }
+    .btn-primary:hover { background: #0b5ed7; }
+    .btn-secondary {
+      background: #e9ecef;
+      color: #1a1a2e;
+    }
+    .btn-secondary:hover { background: #dee2e6; }
+    .btn-ai {
+      background: #6c63ff;
+      color: white;
+      width: 100%;
+      padding: 8px;
+      border: none;
+      border-radius: 4px;
+      font-weight: 500;
+      cursor: pointer;
+      font-size: 13px;
+      font-family: inherit;
+    }
+    .btn-ai:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+    .btn-ai:hover:not(:disabled) { background: #5a52d5; }
+
+    .ai-prompt {
+      width: 100%;
+      height: 70px;
+      padding: 6px 8px;
+      border: 1px solid #ced4da;
+      border-radius: 4px;
+      font-size: 13px;
+      font-family: inherit;
+      resize: vertical;
+      margin-bottom: 8px;
+    }
+    .ai-output {
+      background: #1e1e1e;
+      color: #d4d4d4;
+      padding: 10px;
+      border-radius: 4px;
+      font-family: "Courier New", monospace;
+      font-size: 12px;
+      max-height: 200px;
+      overflow-y: auto;
+      white-space: pre-wrap;
+      word-break: break-word;
+      margin-top: 8px;
+    }
+    .ai-status {
+      font-size: 12px;
+      color: #6c757d;
+      margin-top: 4px;
+      min-height: 16px;
+    }
+    .ai-hint {
+      font-size: 11px;
+      color: #6c757d;
+      margin-top: 6px;
+    }
+    .ai-hint a { color: #0d6efd; }
+    .empty-state {
+      color: #6c757d;
+      text-align: center;
+      padding: 20px 0;
+      font-size: 13px;
+    }
+    .hidden { display: none !important; }
+    #show-add-form {
+      width: 100%;
+      padding: 6px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 500;
+      font-family: inherit;
+    }
+    .form-error {
+      color: #dc3545;
+      font-size: 12px;
+      margin-top: 6px;
+    }
+    .footer {
+      margin-top: 16px;
+      padding-top: 10px;
+      border-top: 1px solid #e9ecef;
+      text-align: center;
+    }
+    .footer-ai-note {
+      font-size: 11px;
+      color: #6c63ff;
+      background: #f1f0ff;
+      border-radius: 12px;
+      padding: 4px 10px;
+      display: inline-block;
+      margin-bottom: 8px;
+    }
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 14px;
+    }
+    .footer-links a {
+      font-size: 11px;
+      color: #6c757d;
+      text-decoration: none;
+    }
+    .footer-links a:hover {
+      color: #0d6efd;
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+<h1>
+  🔗 AEM Quicklink Navigator
+  <small>v2.0</small>
+</h1>
+
+<div class="tabs hidden" role="tablist">
+  <button role="tab" aria-selected="true" data-tab="envs" class="active">📁 Envs</button>
+  <button role="tab" aria-selected="false" data-tab="ai">🤖 AI</button>
+</div>
+
+<!-- ===== TAB 1: ENVIRONMENTS ===== -->
+<div class="tab-panel active" id="panel-envs" role="tabpanel">
+  <div id="detect-banner" class="detect-banner hidden">
+    <span class="detect-host" id="detect-host"></span>
+    <button type="button" class="detect-add-btn" id="detect-add-btn">+ Add</button>
+    <button type="button" class="detect-dismiss-btn" id="detect-dismiss-btn">✕</button>
+  </div>
+
+  <input type="text" id="env-search" class="env-search" placeholder="🔍 Search environments..." autocomplete="off">
+  <div id="env-list"></div>
+
+  <button id="show-add-form" class="btn-primary">+ Add Environment</button>
+
+  <div id="add-form" class="add-form hidden">
+    <div id="duplicate-note" class="hint hidden" style="color:#6c757d;font-size:11px;margin-bottom:6px;"></div>
+    <label for="env-name">Environment Name</label>
+    <input type="text" id="env-name" placeholder="e.g. Prod Cloud" autocomplete="off">
+
+    <label for="env-author">Author URL</label>
+    <input type="text" id="env-author" placeholder="https://author-p12345-e67890.adobeaemcloud.com" autocomplete="off">
+
+    <label for="env-publish">Publish URL <span style="font-weight:normal;color:#6c757d;">(optional)</span></label>
+    <input type="text" id="env-publish" placeholder="https://publish-p12345-e67890.adobeaemcloud.com" autocomplete="off">
+
+    <div class="checkbox-row">
+      <input type="checkbox" id="env-is-cloud" checked>
+      <label for="env-is-cloud" style="font-weight:normal;margin:0;">AEM as a Cloud Service</label>
     </div>
-    <script src="js/jquery-min.js"></script>
-    <script src="js/jquery-ui.js"></script>
-    <script src="js/popup.js"></script>
-  </body>
+
+    <div id="env-tier-row">
+      <label for="env-tier">Tier</label>
+      <select id="env-tier">
+        <option value="dev">Development / RDE</option>
+        <option value="stage">Stage</option>
+        <option value="prod">Production</option>
+      </select>
+      <div class="hint" style="font-size:11px;color:#6c757d;margin-top:2px;">Dev/RDE shows CRXDE, Packages, OSGi and Tools. Stage/Prod hide those since AEMaaCS blocks direct access there.</div>
+    </div>
+
+    <div class="form-actions">
+      <button id="save-env" class="btn-primary">Save</button>
+      <button id="cancel-add" class="btn-secondary">Cancel</button>
+    </div>
+    <div id="add-error" class="form-error hidden"></div>
+  </div>
+</div>
+
+<!-- ===== TAB 2: AI GENERATOR (hidden for now) ===== -->
+<div class="tab-panel hidden" id="panel-ai" role="tabpanel">
+  <p style="font-size:13px;color:#495057;margin:0 0 8px 0;">Describe the AEM component you need:</p>
+  <textarea class="ai-prompt" id="ai-prompt" placeholder="e.g. Hero banner with background image, title, and two CTAs"></textarea>
+
+  <button class="btn-ai" id="ai-generate">⚡ Generate Component Code</button>
+  <div class="ai-status" id="ai-status"></div>
+  <div class="ai-output" id="ai-output">Generated code will appear here...</div>
+  <div class="ai-hint">API key configured in <a href="#" id="ai-settings-link">Options</a> (right-click → Options)</div>
+</div>
+
+<div class="footer">
+  <div class="footer-ai-note">🤖 AI-powered component generation coming soon</div>
+  <div class="footer-links">
+    <a href="mailto:admin@khalilganiga.in">✉️ Contact / Feedback</a>
+    <a href="https://buymeacoffee.com/riv3rmak3r" target="_blank" rel="noopener noreferrer">☕ Buy Me a Coffee</a>
+  </div>
+</div>
+
+<script src="js/popup.js"></script>
+</body>
 </html>

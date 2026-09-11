@@ -45,13 +45,19 @@ nav > ul {
   margin-left: 10px;
 }
 
+nav > ul li:has(#lock-vault) {
+  margin-left: auto;
+  margin-right: 10px;
+  align-self: center;
+}
+
 hr {
   border: 0.5px solid #ccc;
   margin-top: 10px;
   margin-bottom: 10px;
 }
 
-.accordion-container > h3 {
+.accordion-container summary {
   cursor: pointer;
   font-size: 20px;
   font-weight: normal;
@@ -62,9 +68,25 @@ hr {
   text-transform: uppercase;
   color: #0e1c4e;
   padding-left: 10px;
+  padding-top: 8px;
+  padding-bottom: 8px;
   margin-top: 10px;
   margin-bottom: 10px;
   text-align: justify;
+  list-style: none;
+}
+
+.accordion-container summary::-webkit-details-marker {
+  display: none;
+}
+
+.accordion-container details[open] summary {
+  background-color: #0e1c4e;
+  color: #fff;
+}
+
+.accordion-container details > div {
+  padding: 5px 2px 10px;
 }
 
 .accordion-container {
@@ -156,7 +178,8 @@ section {
   margin-top: 20px;
 }
 
-.form-container {
+.form-container,
+.vault-container {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -169,6 +192,14 @@ section {
   background: #fff;
 }
 
+.vault-copy {
+  max-width: 320px;
+  font-size: 13px;
+  color: #0e1c4e;
+  text-align: center;
+  padding: 0 15px;
+}
+
 form label {
   font-size: 14px;
   font-weight: normal;
@@ -178,7 +209,8 @@ form label {
 }
 
 form input[type="text"],
-form input[type="password"] {
+form input[type="password"],
+form select {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -192,9 +224,26 @@ form input[type="password"] {
   border-radius: 5px;
   border: 1px solid #0e1c4e;
   box-shadow: #fafaff 0px 0px 10px;
-  cursor: text;
+  cursor: pointer;
   line-height: 1.2em;
   padding: 5px;
+}
+
+.platform-badge {
+  font-size: 11px;
+  font-weight: normal;
+  text-transform: none;
+  border: 1px solid currentColor;
+  border-radius: 4px;
+  padding: 1px 5px;
+  margin-left: 8px;
+  vertical-align: middle;
+}
+
+.unavailable-note {
+  color: #888;
+  font-style: italic;
+  font-size: 13px;
 }
 
 #submit {
@@ -214,14 +263,19 @@ form input[type="password"] {
   color: red;
 }
 
-.ui-accordion-header-active {
-  background-color: #fff;
-  color: #fff;
+summary.current-env {
+  border-left: 4px solid #2e7d32;
 }
 
-.ui-accordion-content-active {
-  background-color: #fff;
-  color: #0e1c4e;
+summary.current-env::after {
+  content: "\25CF";
+  color: #2e7d32;
+  margin-left: 6px;
+  font-size: 0.7em;
+}
+
+.cred-reveal {
+  cursor: pointer;
 }
 
 .cancel-form {
